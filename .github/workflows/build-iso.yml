@@ -1,0 +1,44 @@
+name: SungOS ISO Builder
+
+on:
+  workflow_dispatch: # Manuel tetikleme butonu ekler
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repoyu Kopyala
+        uses: actions/checkout@v4
+
+      - name: Gerekli Paketleri Yükle
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y live-build xorriso squashfs-tools
+
+      - name: ISO Derleme Dizini Hazırla
+        run: |
+          mkdir build && cd build
+          lb config --architectures amd64 \
+                    --distribution bookworm \
+                    --archive-areas "main contrib non-free non-free-firmware" \
+                    --binary-images iso-hybrid \
+                    --bootloader grub \
+                    --debootstrap-options "--variant=minbase"
+
+      - name: SungOS Yapılandırma Dosyalarını Yerleştir
+        run: |
+          # os-release dosyasını ekle
+          mkdir -p build/config/includes.chroot/etc/
+          cp configs/os-release build/config/includes.chroot/etc/os-release
+
+      - name: ISO Dosyasını Derle
+        run: |
+          cd build
+          sudo lb build
+
+      - name: ISO'yu Yükle (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SungOS-Live-ISO
+          path: build/*.iso

@@ -1,0 +1,9 @@
+NAME="SungOS"
+VERSION="24 (Aethel)"
+ID=sungos
+ID_LIKE="debian pardus"
+PRETTY_NAME="SungOS 24"
+VERSION_ID="24"
+HOME_URL="https://github.com/kullanici/sungos-iso-builder"
+SUPPORT_URL="https://github.com/kullanici/sungos-iso-builder/issues"
+BUG_REPORT_URL="https://github.com/kullanici/sungos-iso-builder/issues"
